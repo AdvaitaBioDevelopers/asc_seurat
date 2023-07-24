@@ -12,5 +12,8 @@
   "devDependencies": {
     "@angular/cli": "^16.1.5",
     "electron": "^25.3.1"
+  },
+  "dependencies": {
+    "ipc": "^0.0.1"
   }
 }
