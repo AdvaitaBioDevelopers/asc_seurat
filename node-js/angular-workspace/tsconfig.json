@@ -27,7 +27,7 @@
       "path": [
         "node_modules/path-browserify"
       ],
-      "fs" : [
+      "fs": [
         "node_modules/browserify-fs"
       ],
       "stream": [

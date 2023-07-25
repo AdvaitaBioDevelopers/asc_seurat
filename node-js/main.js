@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const DIST = "angular-workspace/dist/angular-workspace/index.html";
 
 function createWindow() {
@@ -11,5 +11,11 @@ function createWindow() {
   });
   window.loadFile(DIST);
 }
+
+ipcMain.on("message", (event, arg) => {
+  console.log(arg);
+  console.log(event);
+  event.reply("reply", "pong");
+});
 
 app.whenReady().then(createWindow);

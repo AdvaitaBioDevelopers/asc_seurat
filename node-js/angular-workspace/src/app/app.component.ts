@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'angular-workspace';
 
-  constructor() {
-    ipcRenderer;
-  }
+  constructor() {}
+
+  ngAfterViewInit() {}
 }
