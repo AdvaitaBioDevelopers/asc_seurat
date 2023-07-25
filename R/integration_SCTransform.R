@@ -31,7 +31,8 @@ integration_sctransform <- function(config_csv = config_csv,
     sing_cell_list <- lapply(X = sing_cell_list,
                              FUN = SCTransform,
                              method = "glmGamPoi",
-                             vars.to.regress = "percent.mt")
+                             vars.to.regress = "percent.mt",
+                             verbose=TRUE)
     
     features <- SelectIntegrationFeatures(object.list = sing_cell_list,
                                           nfeatures = 3000)

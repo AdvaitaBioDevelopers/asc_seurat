@@ -34,7 +34,7 @@ SCTransform_function <- function(name,
         ret_data <- sc_data
     }
 
-    ret_data <- SCTransform(ret_data, vars.to.regress = "percent.mt", verbose = FALSE)
+    ret_data <- SCTransform(ret_data, vars.to.regress = "percent.mt", verbose = TRUE)
 
     on.exit(removeNotification(id = "m3"), add = TRUE)
 
