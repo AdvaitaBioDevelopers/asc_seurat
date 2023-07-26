@@ -64,6 +64,10 @@ RUN R -e 'library(patchwork)'
 RUN R -e 'install.packages("vroom", dep = T)'
 RUN R -e 'library(vroom)'
 
+# poorly
+RUN R -e 'install.packages("plotly", dep = T)'
+RUN R -e 'library(plotly)'
+
 # ggplot2 - comment: built by seurat already
 # RUN R -e 'install.packages("ggplot2", dep = T)'
 RUN R -e 'library(ggplot2)'
