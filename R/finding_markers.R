@@ -75,7 +75,7 @@ finding_markers <- function(name,
                                         logfc.threshold = input$find_markers_tab1_logfc.threshold,
                                         min.pct = find_markers_tab1_min.pct,
                                         only.pos = find_markers_tab1_filt_pos,
-                                        return.thresh = find_markers_tab1_return.thresh,
+                                        # return.thresh = find_markers_tab1_return.thresh,
                                         assay = assay_choice,
                                         # test.use = "DESeq2")
                                          test.use = find_markers_tab1_test.use)

@@ -9,6 +9,7 @@ suppressMessages( require("reactable") )
 suppressMessages( require("rclipboard") )
 suppressMessages( require("shinycssloaders") )
 suppressMessages( require("shinyFeedback") )
+suppressMessages(require("plotly"))
 
 if (dir.exists('/app/user_work')) {
     source("/app/R/ui_functions.R")
@@ -73,6 +74,7 @@ function(request) {
       br(),
 
       tabsetPanel(
+        selected = "One sample",
 
           ######################
           ## Introduction tab ##
@@ -357,10 +359,10 @@ function(request) {
                        fluidRow(
                            titlePanel("Clustering plots"),
                            column(width = 6,
-                                  my_withSpinner( plotOutput("umap") )
+                                  my_withSpinner( plotlyOutput("umap") )
                            ),
                            column(width = 6,
-                                  my_withSpinner( plotOutput("tSNE") )
+                                  my_withSpinner( plotlyOutput("tSNE") )
                            )
                        ), # Fluid row
                        fluidRow(

@@ -182,8 +182,8 @@ pickerInput_find_markers_test <- function(id) {
         inputId = id,
        # label = "Select the statistical test",
         label = "Statistical test",
-       choices = c("DESeq2","wilcox", "bimod", "roc", "t"),
-    #    choices = c("DESeq2"),
+    #    choices = c("DESeq2","wilcox", "bimod", "roc", "t"),
+       choices = c("DESeq2"),
         selected = "DESeq2",
         multiple = FALSE,
         options = list(`actions-box` = TRUE)

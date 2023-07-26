@@ -5,7 +5,7 @@ options(shiny.sanitize.errors = FALSE)
 options(max.print=100)
 
 # CRAN
-# suppressMessages( require(tidyverse) )
+suppressMessages( require(tidyverse) )
 suppressMessages( require(Seurat) )
 suppressMessages( require(SeuratObject) )
 suppressMessages( require(patchwork) )
@@ -32,6 +32,8 @@ suppressMessages( require(tidyr))
 suppressMessages( require(stringr))
 suppressMessages( require(forcats))
 suppressMessages( require(purrr))
+suppressMessages( require(plotly))
+
 
 
 # Bioconductor
@@ -540,13 +542,13 @@ function(input, output, session) {
 
     observeEvent( list(input$run_clustering, input$load_10X_rds), {
 
-        output$tSNE <- renderPlot({
+        output$tSNE <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_reso_umap() ), reduction = "tsne", label = T, pt.size = .1)
 
         })
 
-        output$umap <- renderPlot({
+        output$umap <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_reso_umap()), reduction = "umap", label = T, pt.size = .1)
 
@@ -672,8 +674,10 @@ function(input, output, session) {
             label = "Select the cluster(s) to compare",
             choices = sort(clusters),
             multiple = T,
-            options = list(`actions-box` = TRUE,
-                           "max-options-group" = 1),
+            options = list(
+                            #`actions-box` = TRUE,
+                            "max-options"=1),
+                        #    "max-options-group" = 1),
             selected = sort(clusters)[1])
     })
 
