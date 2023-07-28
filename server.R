@@ -523,9 +523,9 @@ function(input, output, session) {
             req(input$n_of_PCs)
             req(input$resolution_clust)
 
-            showNotification("Running the clustering step",
-                             duration = NULL,
-                             id = "m6")
+            # showNotification("Running the clustering step",
+                             # duration = NULL,
+                             # id = "m6")
 
             data_sc <- req( single_cell_data_pca() )
 
@@ -674,8 +674,7 @@ function(input, output, session) {
             label = "Select the cluster(s) to compare",
             choices = sort(clusters),
             multiple = T,
-            options = list(
-                            #`actions-box` = TRUE,
+            options = list(`actions-box` = TRUE,
                             "max-options"=1),
                         #    "max-options-group" = 1),
             selected = sort(clusters)[1])

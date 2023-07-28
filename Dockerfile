@@ -28,14 +28,13 @@ RUN apt-get update && apt-get clean
 # Install CRAN packages
 ## set cores assuming that users are using a computer with 4 cores minimum
 RUN echo 'options(Ncpus = 4)' >> ~/.Rprofile
-RUN R -e 'getOption("Ncpus", 1L)'
 
 # biocmanager
-RUN R -e 'install.packages("BiocManager", dep = T, version = "3.12", Ncpus=4)'
+RUN R -e 'install.packages("BiocManager", dep = T, version = "3.12")'
 RUN R -e 'library(BiocManager)'
 
 # Tidyverse
-RUN R -e 'install.packages("tidyverse", dep = T, Ncpus=4)'
+RUN R -e 'install.packages("tidyverse", dep = T)'
 RUN R -e 'library(tidyverse)'
 
 # if(!library(dplyr, logical.return = T)){
@@ -49,13 +48,14 @@ RUN R -e 'library(littler)'
 # seurat
 # * added gfortran overide to build-essential for newer package - tidyverse uses the older version
 RUN apt-get install -y gfortran
-RUN R -e 'install.packages("Seurat", Ncpus=4)'
+RUN R -e 'install.packages("Seurat")'
 RUN R -e 'library(Seurat)'
 
 # Seuratobject is compiled when seurat is compiled
 # RUN R -e 'install.packages("SeuratObject", dep = T)'
 # Built during Seurat installation
 RUN R -e 'library(SeuratObject)'
+
 # patchwork comment: built while installing Seurat
 # RUN R -e 'install.packages("patchwork", dep = T)'
 RUN R -e 'library(patchwork)'
