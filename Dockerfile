@@ -9,6 +9,7 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /app
 COPY www /app/www
 COPY R /app/R
+COPY configuration_file_for_integration_analysis.csv /app/configuration_file_for_integration_analysis.csv
 
 # Get server files
 COPY global.R /app/global.R
