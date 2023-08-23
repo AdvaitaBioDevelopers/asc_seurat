@@ -17,12 +17,15 @@ COPY server.R /app/server.R
 COPY ui.R /app/ui.R
 COPY /scripts/bscripts/init_app.sh /app/init_app.sh
 
-RUN apt-get update --allow-releaseinfo-change && apt-get upgrade -y && apt-get clean
-RUN apt-get remove -y binutils && apt-get clean
+## Remove all unstable and testing entries
+RUN sed -i 's/testing/bookworm/' /etc/apt/apt.conf.d/default
+RUN rm -rf /etc/apt/sources.list.d/debian-unstable.list
+RUN sed -i 's/testing/bookworm/' /etc/apt/sources.list
+
+RUN apt-get update && apt-get upgrade -y && apt-get clean
+RUN apt-get remove -y binutils
 RUN apt-get update --allow-releaseinfo-change
-RUN apt-get install -y binutils xml2 libxml2-dev libssl-dev libcurl4-openssl-dev unixodbc-dev libhdf5-dev libcairo2-dev libxt-dev libfontconfig1-dev
-# support libraries added tested with buld on mac, addresses tidyverse build issue, fftw3 added for "metap"
-RUN apt-get install -y build-essential libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libgsl-dev libfftw3-dev libv8-dev gdal-bin libgdal-dev
+RUN apt-get install -y binutils xml2 libxml2-dev libssl-dev libcurl4-openssl-dev unixodbc-dev libhdf5-dev libcairo2-dev libxt-dev libfontconfig1-dev build-essential libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libgsl-dev libfftw3-dev libv8-dev gdal-bin libgdal-dev
 RUN apt-get update && apt-get clean
 
 
@@ -38,9 +41,17 @@ RUN R -e 'library(BiocManager)'
 RUN R -e 'install.packages("tidyverse", dep = T)'
 RUN R -e 'library(tidyverse)'
 
+
+# Check for packages 2 methods
+# method 1
 # if(!library(dplyr, logical.return = T)){
 #             quit(status = 10)
 #         }
+
+# method 2
+# if (!requireNamespace("package")) {
+#   stop("Please install package.")
+# }
 
 # littler
 RUN R -e 'install.packages("littler", dep = T)'
