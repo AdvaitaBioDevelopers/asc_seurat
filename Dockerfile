@@ -22,11 +22,11 @@ RUN sed -i 's/testing/bookworm/' /etc/apt/apt.conf.d/default
 RUN rm -rf /etc/apt/sources.list.d/debian-unstable.list
 RUN sed -i 's/testing/bookworm/' /etc/apt/sources.list
 
-RUN apt-get update && apt-get upgrade -y && apt-get clean
+RUN apt-get update && apt-get upgrade -y 
 RUN apt-get remove -y binutils
 RUN apt-get update --allow-releaseinfo-change
 RUN apt-get install -y binutils xml2 libxml2-dev libssl-dev libcurl4-openssl-dev unixodbc-dev libhdf5-dev libcairo2-dev libxt-dev libfontconfig1-dev build-essential libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libgsl-dev libfftw3-dev libv8-dev gdal-bin libgdal-dev
-RUN apt-get update && apt-get clean
+RUN apt-get -y clean
 
 
 # Install CRAN packages
@@ -34,11 +34,11 @@ RUN apt-get update && apt-get clean
 RUN echo 'options(Ncpus = 4)' >> ~/.Rprofile
 
 # biocmanager
-RUN R -e 'install.packages("BiocManager", dep = T, version = "3.12")'
+RUN R -e 'install.packages("BiocManager", version = "3.12")'
 RUN R -e 'library(BiocManager)'
 
 # Tidyverse
-RUN R -e 'install.packages("tidyverse", dep = T)'
+RUN R -e 'install.packages("tidyverse")'
 RUN R -e 'library(tidyverse)'
 
 
@@ -54,7 +54,7 @@ RUN R -e 'library(tidyverse)'
 # }
 
 # littler
-RUN R -e 'install.packages("littler", dep = T)'
+RUN R -e 'install.packages("littler")'
 RUN R -e 'library(littler)'
 
 # seurat
@@ -64,68 +64,68 @@ RUN R -e 'install.packages("Seurat")'
 RUN R -e 'library(Seurat)'
 
 # Seuratobject is compiled when seurat is compiled
-# RUN R -e 'install.packages("SeuratObject", dep = T)'
+# RUN R -e 'install.packages("SeuratObject")'
 # Built during Seurat installation
 RUN R -e 'library(SeuratObject)'
 
 # patchwork comment: built while installing Seurat
-# RUN R -e 'install.packages("patchwork", dep = T)'
+# RUN R -e 'install.packages("patchwork")'
 RUN R -e 'library(patchwork)'
 
 # vroom
-RUN R -e 'install.packages("vroom", dep = T)'
+RUN R -e 'install.packages("vroom")'
 RUN R -e 'library(vroom)'
 
 # poorly
-RUN R -e 'install.packages("plotly", dep = T)'
+RUN R -e 'install.packages("plotly")'
 RUN R -e 'library(plotly)'
 
 # ggplot2 - comment: built by seurat already
-# RUN R -e 'install.packages("ggplot2", dep = T)'
+# RUN R -e 'install.packages("ggplot2")'
 RUN R -e 'library(ggplot2)'
 # svglite
-RUN R -e 'install.packages("svglite", dep = T)'
+RUN R -e 'install.packages("svglite")'
 RUN R -e 'library(svglite)'
 # circlize
-RUN R -e 'install.packages("circlize", dep = T)'
+RUN R -e 'install.packages("circlize")'
 RUN R -e 'library(circlize)'
 # reactable
-RUN R -e 'install.packages("reactable", dep = T, Ncpus = 4)'
+RUN R -e 'install.packages("reactable", Ncpus = 4)'
 RUN R -e 'library(reactable)'
 # sctransform comment: built while compiling Seurat
-# RUN R -e 'install.packages("sctransform", dep = T)'
+# RUN R -e 'install.packages("sctransform")'
 RUN R -e 'library(sctransform)'
 # shiny
 # shiny is built when seurat is compiled
-# RUN R -e 'install.packages("shiny", dep = T)'
+# RUN R -e 'install.packages("shiny")'
 RUN R -e 'library(shiny)'
-RUN R -e 'install.packages("shinyWidgets", dep = T)'
+RUN R -e 'install.packages("shinyWidgets")'
 RUN R -e 'library(shinyWidgets)'
-RUN R -e 'install.packages("shinyFeedback", dep = T)'
+RUN R -e 'install.packages("shinyFeedback")'
 RUN R -e 'library(shinyFeedback)'
-RUN R -e 'install.packages("shinycssloaders", dep = T)'
+RUN R -e 'install.packages("shinycssloaders")'
 RUN R -e 'library(shinycssloaders)'
 # rclipboard
-RUN R -e 'install.packages("rclipboard", dep = T)'
+RUN R -e 'install.packages("rclipboard")'
 RUN R -e 'library(rclipboard)'
 # future
-RUN R -e 'install.packages("future", dep = T)'
+RUN R -e 'install.packages("future")'
 RUN R -e 'library(future)'
 # ggthemes
-RUN R -e 'install.packages("ggthemes", dep = T)'
+RUN R -e 'install.packages("ggthemes")'
 RUN R -e 'library(ggthemes)'
 # multtest
 RUN R -e 'BiocManager::install("multtest")'
 RUN R -e 'library(multtest)'
 # DT
-RUN R -e 'install.packages("DT", dep = T)'
+RUN R -e 'install.packages("DT")'
 RUN R -e 'library(DT)'
 # hdf5r
-RUN R -e 'install.packages("hdf5r", dep = T)'
+RUN R -e 'install.packages("hdf5r")'
 RUN R -e 'library(hdf5r)'
 
 # metap - multtest must be installed first
-RUN R -e 'install.packages("metap", dep = T)'
+RUN R -e 'install.packages("metap")'
 RUN R -e 'library(metap)'
 
 # ComplexHeatmap
