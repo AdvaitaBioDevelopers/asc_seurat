@@ -931,12 +931,12 @@ function(request) {
                            titlePanel("Clustering plots"),
                            column(width = 6,
 
-                                  my_withSpinner( plotOutput("umap_tab2") )
+                                  my_withSpinner( plotlyOutput("umap_tab2") )
 
                            ),
                            column(width = 6,
 
-                                  my_withSpinner( plotOutput("umap_three_samples_comb") )
+                                  my_withSpinner( plotlyOutput("umap_three_samples_comb") )
 
                            )
                        ), # Fluid row
@@ -944,7 +944,7 @@ function(request) {
                            titlePanel("Clustering plots (UMAP) separated by sample"),
                            column(width = 12,
 
-                                  my_withSpinner(  plotOutput("umap_three_samples") )
+                                  my_withSpinner(  plotlyOutput("umap_three_samples") )
                            )
                        ), # Fluid row
 
@@ -1056,7 +1056,7 @@ function(request) {
                                                    selected = 0
                                       ))),
                            conditionalPanel(
-                               condition = "input.find_markers_or_DE_tab2 == 0",
+                                 condition = "input.find_markers_or_DE_tab2 == 0",
                                column(3,
                                       div(class = "option-group",
                                           radioButtons("find_markers_tab2_opt",
@@ -1068,7 +1068,6 @@ function(request) {
 
                                       )
                                ),
-
                                conditionalPanel(
                                    condition = "input.find_markers_tab2_opt == 1",
                                    column(3,

@@ -1866,13 +1866,13 @@ function(input, output, session) {
 
     observeEvent(c(input$run_clustering_tab2, input$load_rds_file2), {
 
-        output$umap_tab2 <- renderPlot({
+        output$umap_tab2 <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_clustered() ), reduction = "umap", label = T, pt.size = .1)
 
         })
 
-        output$umap_three_samples_comb <- renderPlot({
+        output$umap_three_samples_comb <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_clustered() ),
                             reduction = "umap",
@@ -1883,7 +1883,7 @@ function(input, output, session) {
 
         })
 
-        output$umap_three_samples <- renderPlot({
+        output$umap_three_samples <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_clustered() ),
                             reduction = "umap",
