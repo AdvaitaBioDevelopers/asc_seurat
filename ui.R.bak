@@ -2,7 +2,6 @@
 # Version 2.2.1
 set.seed(1407)
 
-## ui.R packages
 suppressMessages( require("shiny") )
 suppressMessages( require("shinyWidgets") )
 suppressMessages( require("DT") )
@@ -11,10 +10,6 @@ suppressMessages( require("rclipboard") )
 suppressMessages( require("shinycssloaders") )
 suppressMessages( require("shinyFeedback") )
 suppressMessages(require("plotly"))
-
-#Options for upload size
-
-options(shiny.maxRequestSize = 100 * 1024^2)
 
 if (dir.exists('/app/user_work')) {
     source("/app/R/ui_functions.R")
@@ -152,26 +147,29 @@ function(request) {
                        p("Choose the sample to be analyzed and the initial requirements to load the data. Note that cells that do not match the parameters will not be load."),
                        p("These parameters are used to exclude low-quality cells and allow the data to load quickly. Users can add more restrictive parameters after visualizing the distributions in the next section."),
                        p("Alternatively, it is possible to load a previously clustered dataset, saving some time by not running the complete analysis."),
-                       #p(strong("After selecting the parameters, click on the blue button to load the data.")),
+                       # p(strong("After selecting the parameters, click on the blue button to load the data.")),
                        br(),
+
                        column(width = 3,
                               div(class = "option-group",
                                   radioButtons("sample_tab1_options",
                                                "Run a new analysis or read a previously saved file?",
                                                choices = list("Run a new analysis" = 0,
-                                                              "Load RDS file" = 1),
+                                                              "Load file" = 1),
                                                selected = c(0) )),
 
                               conditionalPanel (
                                   condition = "input.sample_tab1_options == 0",
-                                  # my_withSpinner(
-                                  #     uiOutput('select_sample_tab1'))
-                                  fileInput( inputId = "upload", label = "Upload 10x chromium data as zip", multiple = F, accept = '.zip' ),
+
+                                  my_withSpinner(
+                                      uiOutput('select_sample_tab1'))
+
                               ),
                        ),
 
                        conditionalPanel (
                            condition = "input.sample_tab1_options == 1",
+
                            column(width = 3,
                                   my_withSpinner( uiOutput("select_sample_tab1_rds_ui") ),
                            ),
@@ -725,22 +723,22 @@ function(request) {
                                                selected = c(0) )),
                               conditionalPanel (
                                   condition = "input.integration_options == 0",
+
                                   div(class = "option-group",
-                                  fileInput( inputId = "multi_upload", label = "Upload 10x chromium data as zip", multiple = F, accept = '.zip' ),
-                                  # div(class = "option-group",
                                       fileInput("samples_list_integration",
-                                                # label = "Read the configuration file containing the samples' information",
-                                                label = "Upload metadata information as csv",
+                                                label = "Read the configuration file containing the samples' information",
                                                 accept = c(
                                                     'text/csv',
                                                     'text/comma-separated-values',
                                                     'text/tab-separated-values',
                                                     'csv',
                                                     'tsv') ) ),
+
                                   my_withSpinner( uiOutput('select_sample_tab2') )
                                   #),
                               ),
                        ),
+
 
                        conditionalPanel(
                            condition = "input.integration_options != 0",
@@ -783,6 +781,7 @@ function(request) {
                                ),
                                column(width = 3,
                                       select_norm_methods("normaliz_method_tab2"),
+
                                       conditionalPanel(
                                           condition = "input.normaliz_method_tab2 == 0",
                                           numericInput_scale_factor("scale_factor_tab2"),
@@ -801,6 +800,7 @@ function(request) {
 
                    conditionalPanel (
                        condition = "input.integration_options != 1",
+
                        conditionalPanel (
                            condition = "input.load_rds_file != 0",
 
@@ -931,12 +931,12 @@ function(request) {
                            titlePanel("Clustering plots"),
                            column(width = 6,
 
-                                  my_withSpinner( plotOutput("umap_tab2") )
+                                  my_withSpinner( plotlyOutput("umap_tab2") )
 
                            ),
                            column(width = 6,
 
-                                  my_withSpinner( plotOutput("umap_three_samples_comb") )
+                                  my_withSpinner( plotlyOutput("umap_three_samples_comb") )
 
                            )
                        ), # Fluid row
@@ -944,7 +944,7 @@ function(request) {
                            titlePanel("Clustering plots (UMAP) separated by sample"),
                            column(width = 12,
 
-                                  my_withSpinner(  plotOutput("umap_three_samples") )
+                                  my_withSpinner(  plotlyOutput("umap_three_samples") )
                            )
                        ), # Fluid row
 
@@ -1053,10 +1053,10 @@ function(request) {
                                                    "Detect conserved markers or D.E. genes",
                                                    choices = c("Conserved markers" = 0,
                                                                "D.E. genes between samples" = 1),
-                                                   selected = 1
+                                                   selected = 0
                                       ))),
                            conditionalPanel(
-                               condition = "input.find_markers_or_DE_tab2 == 0",
+                                 condition = "input.find_markers_or_DE_tab2 == 0",
                                column(3,
                                       div(class = "option-group",
                                           radioButtons("find_markers_tab2_opt",
@@ -1068,7 +1068,6 @@ function(request) {
 
                                       )
                                ),
-
                                conditionalPanel(
                                    condition = "input.find_markers_tab2_opt == 1",
                                    column(3,
@@ -1080,6 +1079,7 @@ function(request) {
                                    condition = "input.find_markers_tab2_opt == 2",
                                    column(3,
                                           div(class = "option-group",
+
                                               my_withSpinner( uiOutput("find_markers_clust_ID1_tab2_ui") ),
                                               my_withSpinner( uiOutput("find_markers_clust_ID2_tab2_ui") )
 
@@ -1090,14 +1090,15 @@ function(request) {
                                condition = "input.find_markers_or_DE_tab2 == 1",
                                column(3,
                                       div(class = "option-group",
-                                          my_withSpinner( uiOutput("find_markers_or_DE_tab2_cluster1_ui") ),
+                                          my_withSpinner( uiOutput("find_markers_or_DE_tab2_cluster_ui") ),
                                           my_withSpinner( uiOutput("find_markers_or_DE_tab2_treat1_ui") ),
-                                          my_withSpinner( uiOutput("find_markers_or_DE_tab2_cluster2_ui") ),
                                           my_withSpinner( uiOutput("find_markers_or_DE_tab2_treat2_ui") ),
                                           pickerInput_find_markers_test("find_markers_tab2_test.use"),
+
                                           numericInput("find_markers_or_DE_tab2_pvalue",
                                                        label = "Select the (adjusted) p-value threshold.",
                                                        value = 0.05),
+
                                       ))),
 
                            column(3,

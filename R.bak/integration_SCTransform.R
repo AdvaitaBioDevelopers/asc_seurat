@@ -4,9 +4,8 @@ integration_sctransform <- function(config_csv = config_csv,
 
     sing_cell_list <- list()
     for( i in 1:nrow(config_csv) ) {
-        # data_10x_raw <- Seurat::Read10X( data.dir = paste0("./data/", config_csv[ i, 1 ] ) )
-        data_10x_raw <- Seurat::Read10X( data.dir = config_csv[ i, 1 ] )
-        unlink(config_csv[ i, 1 ], recursive = T)
+
+        data_10x_raw <- Seurat::Read10X( data.dir = paste0("./data/", config_csv[ i, 1 ] ) )
 
         data_10x <- Seurat::CreateSeuratObject(counts = data_10x_raw,
                                        project = project_name,
@@ -34,7 +33,7 @@ integration_sctransform <- function(config_csv = config_csv,
                              method = "glmGamPoi",
                              vars.to.regress = "percent.mt",
                              verbose=TRUE)
-
+    
     features <- SelectIntegrationFeatures(object.list = sing_cell_list,
                                           nfeatures = 3000)
 

@@ -5,8 +5,7 @@ options(shiny.sanitize.errors = FALSE)
 options(max.print=100)
 
 # CRAN
-suppressMessages( require(tidyverse))
-suppressMessages( require(devtools))
+suppressMessages( require(tidyverse) )
 suppressMessages( require(Seurat) )
 suppressMessages( require(SeuratObject) )
 suppressMessages( require(patchwork) )
@@ -34,21 +33,18 @@ suppressMessages( require(stringr))
 suppressMessages( require(forcats))
 suppressMessages( require(purrr))
 suppressMessages( require(plotly))
-suppressMessages(require(BiocManager))
+
 
 
 # Bioconductor
-suppressMessages(require(DESeq2))
 suppressMessages( require(ComplexHeatmap) )
 suppressMessages( require(SingleCellExperiment) )
 suppressMessages( require(slingshot) )
 suppressMessages( require(multtest) )
 suppressMessages( require(biomaRt) )
 suppressMessages( require(topGO) )
-suppressMessages(require(BiocVersion))
 
 # dynverse packages
-suppressMessages( require(dynmethods) )
 suppressMessages( require(dynplot) )
 suppressMessages( require(dynwrap) )
 suppressMessages( require(dynfeature) )
@@ -146,13 +142,7 @@ function(input, output, session) {
                          duration = NULL,
                          id = "p1")
 
-        # sing_cell_data.data <- Seurat::Read10X(data.dir = req(input$sample_folder_tab1))
-        req(input$upload)
-        unzip(input$upload$datapath)
-        files <- unzip(input$upload$datapath, list = TRUE)
-        sing_cell_data.data <- Seurat::Read10X(file.path(getwd(),files[files$Length==0,][,1]))
-        # unlink(file.path(getwd(),files[files$Length==0,][,1]), recursive = T)
-        unlink(file.path(getwd(),c(files[files$Length==0,][,1])), recursive = T)
+        sing_cell_data.data <- Seurat::Read10X(data.dir = req(input$sample_folder_tab1))
 
         # Initialize the Seurat object with the raw (non-normalized data).
         sing_cell_data <- Seurat::CreateSeuratObject(counts = sing_cell_data.data,
@@ -176,9 +166,11 @@ function(input, output, session) {
             sc_object <- req(single_cell_data_reac())
             mito_regex <- req(input$mito_regex)
             assay <- DefaultAssay(object = sc_object)
+
             mitho_genes <- grep(pattern = mito_regex,
                                 x = rownames(x = sc_object[[assay]]),
                                 value = TRUE)
+
             if ( length(mitho_genes) <= 0) {
 
                 print("No gene target by the common identifier!")
@@ -1329,13 +1321,6 @@ function(input, output, session) {
 
     samples_list_integration <- reactive({
 
-        req(input$multi_upload)
-        unzip(input$multi_upload$datapath)
-        files <- unzip(input$multi_upload$datapath, list = TRUE)
-        # sing_cell_data.data <- Seurat::Read10X(file.path(getwd(),files[files$Length==0,][,1]))
-        # unlink(file.path(getwd(),files[files$Length==0,][,1]), recursive = T)
-        # unlink(file.path(getwd(),c(files[files$Length==0,][,1])), recursive = T)
-
         req(input$samples_list_integration)
 
         ext <- tools::file_ext(input$samples_list_integration$name)
@@ -1347,7 +1332,6 @@ function(input, output, session) {
             'text/tab-separated-values',
             'csv',
             'tsv')
-
 
         shinyFeedback::feedbackDanger("samples_list_integration",
                                       test == F,
@@ -1882,13 +1866,13 @@ function(input, output, session) {
 
     observeEvent(c(input$run_clustering_tab2, input$load_rds_file2), {
 
-        output$umap_tab2 <- renderPlot({
+        output$umap_tab2 <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_clustered() ), reduction = "umap", label = T, pt.size = .1)
 
         })
 
-        output$umap_three_samples_comb <- renderPlot({
+        output$umap_three_samples_comb <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_clustered() ),
                             reduction = "umap",
@@ -1899,7 +1883,7 @@ function(input, output, session) {
 
         })
 
-        output$umap_three_samples <- renderPlot({
+        output$umap_three_samples <- renderPlotly({
 
             Seurat::DimPlot(req( single_cell_data_clustered() ),
                             reduction = "umap",
@@ -2017,7 +2001,9 @@ function(input, output, session) {
     )
 
     output$find_markers_clust_id_tab2_ui <- renderUI ({
+
         clusters <- req( clusters_single_cell_data_reso_umap_tab2() )
+
         shinyWidgets::pickerInput(
             inputId = "find_markers_clust_id_tab2",
             label = "Select the cluster of interest",
@@ -2025,10 +2011,13 @@ function(input, output, session) {
             multiple = FALSE,
             options = list(`actions-box` = TRUE)
         )
+
     })
 
     output$find_markers_clust_ID1_tab2_ui <- renderUI ({
+
         clusters <- req( clusters_single_cell_data_reso_umap_tab2() )
+
         shinyWidgets::pickerInput(
             inputId = "find_markers_clust_ID1_tab2",
             label = "Select the cluster of interest",
@@ -2036,12 +2025,16 @@ function(input, output, session) {
             multiple = FALSE,
             options = list(`actions-box` = TRUE)
         )
+
     })
 
     output$find_markers_clust_ID2_tab2_ui <- renderUI ({
+
         clusters <- req( clusters_single_cell_data_reso_umap_tab2() )
+
         # Exclude the cluster already selected in the option 1, since the two cluster must be different
         clusters <- clusters[ !clusters == req(input$find_markers_clust_ID1_tab2)]
+
         shinyWidgets::pickerInput(
             inputId = "find_markers_clust_ID2_tab2",
             label = "Select the cluster(s) to compare",
@@ -2050,63 +2043,58 @@ function(input, output, session) {
             options = list(`actions-box` = TRUE),
             selected = sort(clusters)[1]
         )
+
     })
 
-    output$find_markers_or_DE_tab2_cluster1_ui <- renderUI ({
+    output$find_markers_or_DE_tab2_cluster_ui <- renderUI ({
+
         clusters <- req( clusters_single_cell_data_reso_umap_tab2() )
+
         shinyWidgets::pickerInput(
-            inputId = "find_markers_or_DE_tab2_cluster1",
-            # label = "Select the cluster of interest",
-            label = "Choose the cluster/cell type",
+            inputId = "find_markers_or_DE_tab2_cluster",
+            label = "Select the cluster of interest",
             choices = sort(clusters),
             multiple = FALSE,
             options = list(`actions-box` = TRUE)
         )
+
     })
 
     output$find_markers_or_DE_tab2_treat1_ui <- renderUI({
+
         treat <- req( treat_single_cell_data_reso_umap_tab2() )
+
         shinyWidgets::pickerInput(
             inputId = "find_markers_or_DE_tab2_treat1",
-            label = "Select the Experimental group",
-            # label = "Select the sample/treatment of interest",
+            label = "Select the sample/treatment of interest",
             choices = treat,
             multiple = FALSE,
             options = list(`actions-box` = TRUE)
         )
+
     })
 
-    output$find_markers_or_DE_tab2_cluster2_ui <- renderUI ({
-        clusters <- req( clusters_single_cell_data_reso_umap_tab2() )
-        clusters <- clusters[ !clusters == "find_markers_or_DE_tab2_cluster1"]
+    output$find_markers_or_DE_tab2_treat2_ui  <- renderUI({
+
+        treat <- req( treat_single_cell_data_reso_umap_tab2() )
+        treat <- treat[!treat %in% req(input$find_markers_or_DE_tab2_treat1)]
+
         shinyWidgets::pickerInput(
-            inputId = "find_markers_or_DE_tab2_cluster2",
-            # label = "Select the cluster of interest",
-            label = "Choose the cluster/cell type",
-            choices = sort(clusters),
-            multiple = FALSE,
-            options = list(`actions-box` = TRUE)
+            inputId = "find_markers_or_DE_tab2_treat2",
+            label = "Select the sample/treatment of interest",
+            choices = treat,
+            multiple = T,
+            options = list(`actions-box` = TRUE),
+            selected = treat[1]
         )
-    })
 
-output$find_markers_or_DE_tab2_treat2_ui  <- renderUI({
-    treat <- req( treat_single_cell_data_reso_umap_tab2() )
-    treat <- treat[!treat == input$find_markers_or_DE_tab2_treat1]
-    # treat <- treat[!treat %in% req(input$find_markers_or_DE_tab2_treat1)]
-    shinyWidgets::pickerInput(
-        inputId = "find_markers_or_DE_tab2_treat2",
-        # label = "Select the sample/treatment of interest",
-        label = "Select the Control group",
-        choices = treat,
-        multiple = F,
-        options = list(`actions-box` = TRUE),
-        selected = treat[1]
-    )
-})
+    })
 
     # We change the assay here, so DE analysis and the visualization are performed in the "RNA" assay.
     single_cell_data_clustered_to_DE_vis <- reactive({
+
         sc_data <- single_cell_data_clustered()
+
         sc_data <- NormalizeData(sc_data,
                                  assay = "RNA",
                                  normalization.method = "LogNormalize",
@@ -2129,48 +2117,68 @@ output$find_markers_or_DE_tab2_treat2_ui  <- renderUI({
 
     # Identification of markers (tab 2)
     markers_tab2 <- eventReactive( input$run_ident_markers_tab2, {
+
         showNotification("Identifing markers or D.E. genes",
                          duration = NULL,
                          id = "tab2_n1")
+
         sc_data <- req( single_cell_data_clustered_to_DE_vis() )
 
         if (input$find_markers_or_DE_tab2 == 0 ) {
+
             showNotification("Identifing markers or D.E. genes",
                              duration = NULL,
                              id = "tab2_n1")
+
             if ( input$find_markers_tab2_opt == 0 ) {
+
                 clusters <- as.numeric(as.character(unique(sc_data@meta.data$seurat_clusters)))
                 markers_tab2 <- data.frame()
+
                 for (i in clusters) {
+
                     markers <- FindConservedMarkers(sc_data,
                                                     ident.1 = i,
                                                     grouping.var = "treat",
                                                     verbose = T,
                                                     assay = "RNA" )
+
                     markers$cluster <- i
                     markers$geneID <- base::rownames(markers)
+
                     if ( nrow(markers) == 0) {
+
                         markers <- rbind(rep(paste("No markers identified for cluster", i ) , ncol(markers_tab2)))
                         colnames(markers) <- colnames(markers_tab2)
 
+
                     }
+
                     markers_tab2 <- dplyr::bind_rows(markers_tab2, markers)
+
                 }
 
                 markers_tab2
+
             } else if ( input$find_markers_tab2_opt == 1 ) {
+
                 markers_tab2 <- FindConservedMarkers(sc_data,
                                                      ident.1 = req(input$find_markers_clust_id_tab2),
                                                      grouping.var = "treat",
                                                      assay = "RNA" )
+
                 markers_tab2$cluster <- input$find_markers_clust_id_tab2
+
                 markers_tab2$geneID <- base::rownames(markers_tab2)
+
             } else if ( input$find_markers_tab2_opt == 2 ) {
+
                 markers_tab2 <- FindConservedMarkers(sc_data,
                                                      ident.1 = req(input$find_markers_clust_ID1_tab2),
                                                      ident.2 = req(input$find_markers_clust_ID2_tab2),
                                                      grouping.var = "treat",
                                                      assay = "RNA" )
+
                 markers_tab2$cluster <- paste0(input$find_markers_clust_ID1_tab2,
                                                "_vs_",
                                                input$find_markers_clust_ID2_tab2)
@@ -2189,14 +2197,15 @@ output$find_markers_or_DE_tab2_treat2_ui  <- renderUI({
                                            "Required value")
 
             req(input$find_markers_or_DE_tab2_pvalue)
+
             sc_data$celltype.treat <- paste(Idents(sc_data), sc_data$treat, sep = "_")
             Idents(sc_data) <- "celltype.treat"
+
             markers_tab2 <- FindMarkers(sc_data,
-                                        ident.1 = paste(req(input$find_markers_or_DE_tab2_cluster1),
+                                        ident.1 = paste(req(input$find_markers_or_DE_tab2_cluster),
                                                         req(input$find_markers_or_DE_tab2_treat1),
                                                         sep = "_"),
-                                        # ident.2 = paste(req(input$find_markers_or_DE_tab2_cluster),
-                                        ident.2 = paste(req(input$find_markers_or_DE_tab2_cluster2),
+                                        ident.2 = paste(req(input$find_markers_or_DE_tab2_cluster),
                                                         req(input$find_markers_or_DE_tab2_treat2),
                                                         sep = "_"),
                                         test.use = input$find_markers_tab2_test.use,
@@ -2206,10 +2215,9 @@ output$find_markers_or_DE_tab2_treat2_ui  <- renderUI({
 
             markers_tab2 <- markers_tab2[markers_tab2$p_val_adj < input$find_markers_or_DE_tab2_pvalue, ]
 
-            markers_tab2$comparison <- paste("Cluster", input$find_markers_or_DE_tab2_cluster1,
+            markers_tab2$comparison <- paste("Cluster", input$find_markers_or_DE_tab2_cluster,
                                              input$find_markers_or_DE_tab2_treat1,
                                              "vs",
-                                             input$find_markers_or_DE_tab2_cluster2,
                                              input$find_markers_or_DE_tab2_treat2,
                                              sep = "_")
 
@@ -2255,12 +2263,11 @@ output$find_markers_or_DE_tab2_treat2_ui  <- renderUI({
             } else if (input$find_markers_or_DE_tab2 == 1 ) {
 
                 paste("list_of_markers_int.dataset_DEGs_",
-                      input$find_markers_or_DE_tab2_cluster1,
                       input$find_markers_or_DE_tab2_treat1,
                       "_vs_",
                       input$find_markers_or_DE_tab2_treat2,
                       "_cluster_",
-                      input$find_markers_or_DE_tab2_cluster2,
+                      input$find_markers_or_DE_tab2_cluster,
                       ".csv", sep = "")
 
             }
