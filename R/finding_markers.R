@@ -60,7 +60,7 @@ finding_markers <- function(name,
                                         only.pos = find_markers_tab1_filt_pos,
                                         return.thresh = find_markers_tab1_return.thresh,
                                         assay = assay_choice,
-                                         test.use = find_markers_tab1_test.use)
+                                        test.use = find_markers_tab1_test.use)
                                         #test.use = "DESeq2")
 
         }
@@ -78,7 +78,7 @@ finding_markers <- function(name,
                                         # return.thresh = find_markers_tab1_return.thresh,
                                         assay = assay_choice,
                                         # test.use = "DESeq2")
-                                         test.use = find_markers_tab1_test.use)
+                                        test.use = find_markers_tab1_test.use)
 
         } else {
 
@@ -110,5 +110,4 @@ finding_markers <- function(name,
     }
 
     markers_tab1
-
 }

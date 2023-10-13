@@ -11,6 +11,8 @@ suppressMessages( require("rclipboard") )
 suppressMessages( require("shinycssloaders") )
 suppressMessages( require("shinyFeedback") )
 suppressMessages(require("plotly"))
+suppressMessages(require("shinythemes"))
+
 
 #Options for upload size
 
@@ -31,8 +33,7 @@ function(request) {
         setwd('/app/user_work')
     }
 
-    fluidPage(
-
+    fluidPage(theme = shinytheme("yeti"),
         shinyFeedback::useShinyFeedback(),
 
         ####################
@@ -54,11 +55,11 @@ function(request) {
                         border-radius: 6px;
                         padding: 0px 5px;
                         margin: 5px -10px;
-                        background-color: #eadaf7;
+                       /* background-color: #eadaf7; */
             }
 
             .shiny-output-error-validation {
-                        color: #ff0000;
+                         /* color: #ff0000; */
                         font-weight: bold;
             }
       "))),
@@ -66,16 +67,16 @@ function(request) {
       rclipboardSetup(),
 
       # Sets the background color of the application
-      setBackgroundColor(
-          color = c("#F7FBFF", "#d6c5e3"),
-          gradient = "radial",
-          direction = c("top", "left")),
+      # setBackgroundColor(
+      #     color = c("#F7FBFF", "#d6c5e3"),
+      #     gradient = "radial",
+      #     direction = c("top", "left")),
 
       ########################
       # Asc-Seurat interface #
       ########################
 
-      titlePanel(title = "Asc-Seurat - Analytical single-cell Seurat-based web application"),
+      titlePanel(title = "Asc-Seurat Advanced - Updated Asc-Seurat"), # Analytical single-cell Seurat-based web application"
       br(),
 
       tabsetPanel(
@@ -510,7 +511,7 @@ function(request) {
                                                        "Filter only positive markers?",
                                                        choices = c("yes" = "TRUE",
                                                                    "no" = "FALSE"),
-                                                       selected = "TRUE")),
+                                                       selected = "FALSE")),
                                       numericInput("find_markers_tab1_return_thresh",
                                                    label = "Select the (adjusted) p-value threshold",
                                                    value = "0.05",
@@ -537,8 +538,18 @@ function(request) {
                                                  "Download the list of markers or D.E. genes"))
                        ), # ends fluidrow
                        br(),
-                       textInput("API_PUB_KEY", "API Public Key", value="", placeholder = "API public key"),
-                       textInput("API_PVT_KEY", "API Private Key", value="", placeholder = "API private key"),
+                       fluidRow(
+                           column(width=3, textInput("API_PUB_KEY", "API Public Key", value="", placeholder = "API public key")),
+                           column(width=3, textInput("API_PVT_KEY", "API Private Key", value="", placeholder = "API private key")),
+                           column(width=6, textInput("reportName", "Report Name", value=paste0("Report_",format(Sys.Date(),format="%d_%m_%Y"))))),
+                       fluidRow(
+                           column(width=3, selectInput("Organism", "Organism",
+                                       c("Human" = "9606",
+                                         "Mouse" = "10090",
+                                         "Rat" = "10016"),
+                                       selected = "Human")),
+                           column(width=3,numericInput("lfc", "Log2Fold Change", 0.6, step = 0.05)),
+                           column(width=3,numericInput("adjP", "Adjusted P-value", 0.05, step = 0.01))),
                        actionButton("to_IPG", "Analyze with iPG", class = "btn-primary btn-md"),
 
                    ), # ends conditional

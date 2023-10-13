@@ -727,6 +727,12 @@ function(input, output, session) {
 
     })
 
+    # eventReactive(input$find_markers_tab1_opt == 2, {
+    #     deseq2_markers_tab1 <- req(markers_tab1())
+    #     names(deseq2_markers_tab1)[c(1,3,6)]= c("","log2FoldChange","padj")
+    #     write.csv(deseq2_markers_tab1, "deseq2.csv", row.names = FALSE)
+    # })
+
     output$markers_tab1_react <- renderReactable({
 
         markers_tab1 <- req( markers_tab1() )
@@ -737,7 +743,9 @@ function(input, output, session) {
             markers_tab1 <- markers_tab1[, c( 1, ncol(markers_tab1), 2 : ( ncol(markers_tab1) - 1) ) ]
 
         } else if (input$find_markers_tab1_opt == 2) {
-
+            deseq2_markers_tab1 <- markers_tab1
+            names(deseq2_markers_tab1)[c(1,3,6)]= c("","log2FoldChange","padj")
+            write.csv(deseq2_markers_tab1, "deseq2.csv", row.names = FALSE)
             markers_tab1$cluster <- paste0( isolate(input$find_markers_clust_ID1_tab1),
                                             "_vs_" ,
                                             isolate(input$find_markers_clust_ID2_tab1))
@@ -748,12 +756,13 @@ function(input, output, session) {
             markers_tab1 <- markers_tab1[, c(1, ncol(markers_tab1), 2 : ( ncol(markers_tab1) - 1) ) ]
 
         }
-
         on.exit(removeNotification(id = "tab1_n1"), add = TRUE)
-
         my_reactable(markers_tab1)
 
     })
+
+
+
 
     output$download_markers_tab1 <- downloadHandler(
 
@@ -802,6 +811,21 @@ function(input, output, session) {
                          })
         }
     )
+
+# Send the data to iPG
+
+    observeEvent(input$to_IPG, {
+        pID= input$API_PUB_KEY
+        sID= input$API_PVT_KEY
+        oID=input$Organism
+        rName=input$reportName
+        lfc=input$lfc
+        adjP=input$adjP
+
+        system(sprintf("docker run -d --rm -v .:/data/ -e CLIENT_ID=%s -e CLIENT_SECRET=%s -e TITLE=%s -e ORGANISM=%s -e LOGFC=%s -e ADJPV=%s -e INPUT_FILE_PATH=/data/deseq2.csv -e FILE_TYPE=DESEQ advaitabio/api-client ipg-client",pID,sID,rName,oID,lfc,adjP))
+
+        }
+        )
 
     features <- reactive({
 
