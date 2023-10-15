@@ -3,20 +3,20 @@
 set.seed(1407)
 
 ## ui.R packages
-suppressMessages( require("shiny") )
-suppressMessages( require("shinyWidgets") )
-suppressMessages( require("DT") )
-suppressMessages( require("reactable") )
-suppressMessages( require("rclipboard") )
-suppressMessages( require("shinycssloaders") )
-suppressMessages( require("shinyFeedback") )
+suppressMessages(require("shiny"))
+suppressMessages(require("shinyWidgets"))
+suppressMessages(require("DT"))
+suppressMessages(require("reactable"))
+suppressMessages(require("rclipboard"))
+suppressMessages(require("shinycssloaders"))
+suppressMessages(require("shinyFeedback"))
 suppressMessages(require("plotly"))
 suppressMessages(require("shinythemes"))
 
 
 #Options for upload size
 
-options(shiny.maxRequestSize = 100 * 1024^2)
+options(shiny.maxRequestSize = 1000 * 1024^2)
 
 if (dir.exists('/app/user_work')) {
     source("/app/R/ui_functions.R")
@@ -174,7 +174,9 @@ function(request) {
                        conditionalPanel (
                            condition = "input.sample_tab1_options == 1",
                            column(width = 3,
-                                  my_withSpinner( uiOutput("select_sample_tab1_rds_ui") ),
+                                  # my_withSpinner( uiOutput("select_sample_tab1_rds_ui") ),
+                                  # Option to upload 10x rds file
+                                  fileInput( inputId = "upload_10x_rds", label = "Upload 10x chromium data object as RDS/rds", multiple = F, accept = '.rds' ),
                            ),
 
                            column( width = 3,

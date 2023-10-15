@@ -94,34 +94,34 @@ function(input, output, session) {
     ######   Tab 1 - Clustering    ######
     #####################################
 
-    output$select_sample_tab1 = renderUI({
+    # output$select_sample_tab1 = renderUI({
+    #
+    #     dir_list <- list.dirs('./data', recursive=FALSE)
+    #
+    #     div(class = "option-group",
+    #         shinyWidgets::pickerInput(
+    #             inputId = "sample_folder_tab1",
+    #             label = "Select the sample to use",
+    #             choices = sort(dir_list),
+    #             multiple = FALSE,
+    #             options = list(`actions-box` = TRUE)
+    #         ))
+    # })
 
-        dir_list <- list.dirs('./data', recursive=FALSE)
-
-        div(class = "option-group",
-            shinyWidgets::pickerInput(
-                inputId = "sample_folder_tab1",
-                label = "Select the sample to use",
-                choices = sort(dir_list),
-                multiple = FALSE,
-                options = list(`actions-box` = TRUE)
-            ))
-    })
-
-    output$select_sample_tab1_rds_ui <- renderUI({
-
-        rds_list <- list.files('./RDS_files/', pattern = "*.rds")
-
-        div(class = "option-group",
-            shinyWidgets::pickerInput(
-                inputId = "select_sample_tab1_rds",
-                label = "Select the file containing the data",
-                choices = sort(rds_list),
-                multiple = FALSE,
-                options = list(`actions-box` = TRUE)
-            ))
-
-    })
+    # output$select_sample_tab1_rds_ui <- renderUI({
+    #
+    #     rds_list <- list.files('./RDS_files/', pattern = "*.rds")
+    #
+    #     div(class = "option-group",
+    #         shinyWidgets::pickerInput(
+    #             inputId = "select_sample_tab1_rds",
+    #             label = "Select the file containing the data",
+    #             choices = sort(rds_list),
+    #             multiple = FALSE,
+    #             options = list(`actions-box` = TRUE)
+    #         ))
+    #
+    # })
 
     single_cell_data_reac <- eventReactive( input$load_10X, {
 
@@ -503,16 +503,25 @@ function(input, output, session) {
 
         if ( input$sample_tab1_options == 1) { # Load file
 
-            showNotification("Loading the data",
-                             id = "m9",
-                             duration = NULL)
+            # showNotification("Loading the data",
+            #                  id = "m9",
+            #                  duration = NULL)
+            # sc_data <- readRDS( paste0("./RDS_files/", req(input$select_sample_tab1_rds)) )
 
-            sc_data <- readRDS( paste0("./RDS_files/", req(input$select_sample_tab1_rds)) )
+            # store uploaded 10x rds in variable
+            input_rds<-input$upload_10x_rds
+            req(input_rds)
+            # check for extension
+            ext <- tools::file_ext(input_rds$datapath)
+            ext <- tolower(ext)
+            validate(need(ext == "rds", "Please upload a rds file"))
 
+            ## Read the seurat object stored in rds
+            sc_data=readRDS(input_rds$datapath)
             validate(need("seurat_clusters" %in% colnames(sc_data@meta.data),
                           "Clustering was not detected in the rds file", ""))
 
-            on.exit(removeNotification(id = "m9"), add = TRUE)
+            # on.exit(removeNotification(id = "m9"), add = TRUE)
 
         } else if (input$sample_tab1_options == 0 ) { # new analysis
 
