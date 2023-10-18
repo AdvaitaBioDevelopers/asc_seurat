@@ -3,7 +3,7 @@
 set.seed(1407)
 options(shiny.sanitize.errors = FALSE)
 options(max.print=100)
-
+## submit dockers
 # CRAN
 suppressMessages( require(tidyverse))
 suppressMessages( require(devtools))
