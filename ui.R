@@ -253,12 +253,12 @@ function(request) {
                                   div(class = "option-group",
                                       numericInput("min_count",
                                                    label = "Keep only cells that expressed at least this number of genes",
-                                                   value = 0),
+                                                   value = 100),
                                       numericInput("max_count",
                                                    label = "Exclude any cell that expressed more than this number of genes (i.e. possible doublets)",
-                                                   value = 10000)),
+                                                   value = 5000)),
 
-                                  numericInput_max_mito_perc("max_mito_perc", value = 100),
+                                  numericInput_max_mito_perc("max_mito_perc", value = 10),
                                   actionButtonInput("run_vinplot",
                                                     HTML("Show/update plot of filtered data"))
                            )
