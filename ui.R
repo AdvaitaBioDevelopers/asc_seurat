@@ -522,8 +522,24 @@ function(request) {
 
                                   actionButtonInput("run_ident_markers_tab1",
                                                     HTML("Search for markers/D.E. genes"))),
+                           
                        ), # ends conditional
                    ), # ends fluidrow
+                   conditionalPanel (
+                     condition = "input.find_markers_tab1_opt == 2",
+                   fluidRow(
+                     column(width=3, textInput("API_PUB_KEY", "API Public Key", value="", placeholder = "API public key")),
+                     column(width=3, textInput("API_PVT_KEY", "API Private Key", value="", placeholder = "API private key")),
+                     column(width=6, textInput("reportName", "Report Name", value=paste0("Report_",format(Sys.Date(),format="%d_%m_%Y"))))),
+                   fluidRow(
+                     column(width=3, selectInput("Organism", "Organism",
+                                                 c("Human" = "9606",
+                                                   "Mouse" = "10090",
+                                                   "Rat" = "10016"),
+                                                 selected = "Human")),
+                     column(width=3,numericInput("lfc", "Log2Fold Change", 0.6, step = 0.05)),
+                     column(width=3,numericInput("adjP", "Adjusted P-value", 0.05, step = 0.01))),
+                   actionButton("to_IPG", "Analyze with iPG", class = "btn-primary btn-md")),
 
                    conditionalPanel(
                        condition = "input.find_markers_tab1 == 1",
@@ -539,21 +555,6 @@ function(request) {
                                   downloadButton("download_markers_tab1",
                                                  "Download the list of markers or D.E. genes"))
                        ), # ends fluidrow
-                       br(),
-                       fluidRow(
-                           column(width=3, textInput("API_PUB_KEY", "API Public Key", value="", placeholder = "API public key")),
-                           column(width=3, textInput("API_PVT_KEY", "API Private Key", value="", placeholder = "API private key")),
-                           column(width=6, textInput("reportName", "Report Name", value=paste0("Report_",format(Sys.Date(),format="%d_%m_%Y"))))),
-                       fluidRow(
-                           column(width=3, selectInput("Organism", "Organism",
-                                       c("Human" = "9606",
-                                         "Mouse" = "10090",
-                                         "Rat" = "10016"),
-                                       selected = "Human")),
-                           column(width=3,numericInput("lfc", "Log2Fold Change", 0.6, step = 0.05)),
-                           column(width=3,numericInput("adjP", "Adjusted P-value", 0.05, step = 0.01))),
-                       actionButton("to_IPG", "Analyze with iPG", class = "btn-primary btn-md"),
-
                    ), # ends conditional
 
                    fluidRow(
