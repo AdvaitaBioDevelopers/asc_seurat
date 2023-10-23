@@ -830,7 +830,7 @@ function(input, output, session) {
         rName=input$reportName
         lfc=input$lfc
         adjP=input$adjP
-        system(sprintf("docker run -d --rm -v $(PWD):/data/ -e CLIENT_ID=%s -e CLIENT_SECRET=%s -e TITLE='%s' -e ORGANISM=%s -e LOGFC=%s -e ADJPV=%s -e INPUT_FILE_PATH=/data/deseq2.csv -e FILE_TYPE=DESEQ advaitabio/api-client ipg-client",pID,sID,rName,oID,lfc,adjP))
+        system(sprintf("docker run -d --rm -v $(PWD):/data/ -e CLIENT_ID=%s -e CLIENT_SECRET=%s -e TITLE='%s' -e ORGANISM=%s -e LOGFC=%s -e ADJPV=%s -e INPUT_FILE_PATH=/data/deseq2.csv -e FILE_TYPE=DESEQ -e DO_NOT_FOLLOW=1 advaitabio/api-client ipg-client",pID,sID,rName,oID,lfc,adjP))
         }
         )
 
