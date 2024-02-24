@@ -11,3 +11,6 @@ docs/make.bat
 docs/Makefile
 docs/_html/
 images/
+*.json
+*.b64html
+*.b64html
