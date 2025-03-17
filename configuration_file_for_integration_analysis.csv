@@ -1,3 +1,0 @@
-﻿Subdirectory name,Sample name,Min. number of cells expressing a gene,Min. number of genes a cell must express to be included,Maximum number of genes a cell can express and still be included,Maximum percentage of genes belonging to the mitochondrial genome
-ctrl,Control,3,250,2000,5
-stim,Stimulated,3,250,2000,5
